@@ -1,8 +1,9 @@
-import { MessageCircle } from 'lucide-react'
-import { Header } from '../components/Header'
-import { Video } from '../components/Video'
-import { Module } from '../components/Module'
-import { useAppSelector } from '../store'
+import { MessageCircle } from "lucide-react";
+
+import { Header } from "../components/Header";
+import { Video } from "../components/Video";
+import { Module } from "../components/Module";
+import { useAppSelector } from "../store";
 
 export function Player() {
   const modules = useAppSelector(state => {
@@ -40,5 +41,5 @@ export function Player() {
         </main>
       </div>
     </div>
-  )
+  );
 }
