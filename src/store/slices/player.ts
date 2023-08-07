@@ -1,6 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { useAppSelector } from "..";
-import { api } from "../../services/api";
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { api } from '../../services/api'
 
 interface Course {
   id: number
@@ -16,10 +15,10 @@ interface Course {
 }
 
 export interface PlayerState {
-  course: Course | null;
-  isLoading: boolean;
-  currentModuleIndex: number;
-  currentLessonIndex: number;
+  course: Course | null
+  isLoading: boolean
+  currentModuleIndex: number
+  currentLessonIndex: number
 }
 
 const initialState: PlayerState = {
@@ -29,17 +28,14 @@ const initialState: PlayerState = {
   currentLessonIndex: 0,
 }
 
-export const loadCourse = createAsyncThunk(
-  'player/load',
-  async () => {
-    const response = await api.get('/courses/1')
+export const loadCourse = createAsyncThunk('player/load', async () => {
+  const response = await api.get('/courses/1')
 
-    return response.data
-  }
-)
+  return response.data
+})
 
 export const playerSlice = createSlice({
-  name: "player",
+  name: 'player',
   initialState,
   reducers: {
     play: (state, action: PayloadAction<[number, number]>) => {
@@ -48,21 +44,22 @@ export const playerSlice = createSlice({
     },
 
     next: (state) => {
-      const nextLessonIndex = state.currentLessonIndex + 1;
-      const nextLesson = state.course?.modules[state.currentModuleIndex].lessons[nextLessonIndex];
+      const nextLessonIndex = state.currentLessonIndex + 1
+      const nextLesson =
+        state.course?.modules[state.currentModuleIndex].lessons[nextLessonIndex]
 
       if (nextLesson) {
-        state.currentLessonIndex = nextLessonIndex;
+        state.currentLessonIndex = nextLessonIndex
       } else {
-        const nextModuleIndex = state.currentModuleIndex + 1;
-        const nextModule = state.course?.modules[nextModuleIndex];
+        const nextModuleIndex = state.currentModuleIndex + 1
+        const nextModule = state.course?.modules[nextModuleIndex]
 
         if (nextModule) {
-          state.currentModuleIndex = nextModuleIndex;
-          state.currentLessonIndex = 0;
+          state.currentModuleIndex = nextModuleIndex
+          state.currentLessonIndex = 0
         }
       }
-    }
+    },
   },
   extraReducers(builder) {
     builder.addCase(loadCourse.pending, (state) => {
@@ -76,17 +73,5 @@ export const playerSlice = createSlice({
   },
 })
 
-
-export const player = playerSlice.reducer;
-export const { play, next } = playerSlice.actions;
-
-export const useCurrentLesson = () => {
-  return useAppSelector(state => {
-    const { currentModuleIndex, currentLessonIndex } = state.player
-
-    const currentModule = state.player.course?.modules[currentModuleIndex]
-    const currentLesson = currentModule?.lessons[currentLessonIndex]
-
-    return { currentModule, currentLesson }
-  })
-}
+export const player = playerSlice.reducer
+export const { play, next } = playerSlice.actions
