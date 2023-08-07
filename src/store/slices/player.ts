@@ -17,11 +17,13 @@ interface Course {
 
 export interface PlayerState {
   course: Course | null;
+  isLoading: boolean;
   currentModuleIndex: number;
   currentLessonIndex: number;
 }
 
 const initialState: PlayerState = {
+  isLoading: false,
   course: null,
   currentModuleIndex: 0,
   currentLessonIndex: 0,
@@ -63,8 +65,13 @@ export const playerSlice = createSlice({
     }
   },
   extraReducers(builder) {
+    builder.addCase(loadCourse.pending, (state) => {
+      state.isLoading = true
+    })
+
     builder.addCase(loadCourse.fulfilled, (state, action) => {
       state.course = action.payload
+      state.isLoading = false
     })
   },
 })
